@@ -105,3 +105,35 @@ class Queen < Piece
         end
     end
 end
+
+class King < Piece
+    MOVES = [[1,1],[-1,-1],[-1,1],[1,-1],[1,0],[-1,0],[0,1],[0,-1]]
+
+    def move(move_pos, ally_positions, check_in_pos)
+        if self.valid_move?(move_pos, check_in_pos) && !ally_positions.include?(move_pos)
+            self.position = move_pos 
+            return true
+        else
+            return false
+        end
+
+    end
+
+    def valid_move?(move,check_in_pos)
+        self.submoves
+        if !check_in_pos && self.moves.include?(move)
+            return true
+        else
+            return false
+        end
+    end
+
+    def submoves
+        MOVES.each do |cords|
+            new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
+            if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0 
+                @moves.push(new_cords)
+            end
+        end
+    end
+end

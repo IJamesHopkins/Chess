@@ -40,3 +40,13 @@ describe Queen do
         end
     end
 end
+
+describe King do
+    describe "#move" do
+        it "moves the piece to x,y" do
+            king = King.new([0,0], "black")
+            king.move([1,1], [], false)
+            expect(king.position).to eql([1,1])
+        end
+    end
+end
