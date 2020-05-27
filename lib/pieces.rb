@@ -64,3 +64,44 @@ class Rook < Piece
         end
     end
 end
+
+
+class Bishop < Piece
+    MOVES = [[1,1],[-1,-1],[-1,1],[1,-1]]
+
+    def submoves(all_positions)
+        MOVES.each do |cords|
+            stop_point = false
+            new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
+            until stop_point do
+                new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
+                if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0
+                    stop_point = true if all_positions.include?(new_cords)
+                    @moves.push(new_cords)
+                else
+                    stop_point = true
+                end
+            end
+        end
+    end
+end
+
+class Queen < Piece
+    MOVES = [[1,1],[-1,-1],[-1,1],[1,-1],[1,0],[-1,0],[0,1],[0,-1]]
+
+    def submoves(all_positions)
+        MOVES.each do |cords|
+            stop_point = false
+            new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
+            until stop_point do
+                new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
+                if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0
+                    stop_point = true if all_positions.include?(new_cords)
+                    @moves.push(new_cords)
+                else
+                    stop_point = true
+                end
+            end
+        end
+    end
+end

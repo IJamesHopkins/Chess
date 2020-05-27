@@ -19,3 +19,24 @@ describe Rook do
         end
     end
 end
+
+
+describe Bishop do
+    describe "#move" do
+        it "moves the piece to x,y" do
+            bishop = Bishop.new([0,0], "black")
+            bishop.move([2,2], [], [[2,3]])
+            expect(bishop.position).to eql([2,2])
+        end
+    end
+end
+
+describe Queen do
+    describe "#move" do
+        it "moves the piece to x,y" do
+            queen = Queen.new([0,0], "black")
+            queen.move([2,2], [], [[2,3]])
+            expect(queen.position).to eql([2,2])
+        end
+    end
+end
