@@ -9,3 +9,13 @@ describe Knight do
         end
     end
 end
+
+describe Rook do
+    describe "#move" do
+        it "moves the piece to x,y" do
+            rook = Rook.new([0,0], "black")
+            rook.move([0,2], [], [[0,3]])
+            expect(rook.position).to eql([0,2])
+        end
+    end
+end

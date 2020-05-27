@@ -8,7 +8,7 @@ class Piece
         @moves = []
     end
 
-    def move(move_pos, ally_positions)
+    def move(move_pos, ally_positions, all_positions = [])
         if self.valid_move?(move_pos) && !ally_positions.include?(move_pos)
             self.position = move_pos 
             return true
@@ -18,8 +18,12 @@ class Piece
 
     end
 
-    def valid_move?(move)
-        self.submoves
+    def valid_move?(move, all_positions = [])
+        if self.is_a?(Knight)
+            self.submoves
+        else
+            self.submoves(all_positions)
+        end
         if self.moves.include?(move)
             return true
         else
@@ -36,6 +40,26 @@ class Knight < Piece
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
             if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0 
                 @moves.push(new_cords)
+            end
+        end
+    end
+end
+
+class Rook < Piece
+    MOVES = [[1,0],[-1,0],[0,1],[0,-1]]
+
+    def submoves(all_positions)
+        MOVES.each do |cords|
+            stop_point = false
+            new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
+            until stop_point do
+                new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
+                if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0
+                    stop_point = true if all_positions.include?(new_cords)
+                    @moves.push(new_cords)
+                else
+                    stop_point = true
+                end
             end
         end
     end
