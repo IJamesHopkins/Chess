@@ -184,8 +184,4 @@ class Pawn < Piece
         end
         return true
     end
-
-    def submoves
-    end
-
 end
