@@ -11,8 +11,11 @@ class Piece
     def move(move_pos, ally_positions, all_positions = [])
         if self.valid_move?(move_pos) && !ally_positions.include?(move_pos)
             self.position = move_pos 
+            path.push(move_pos)
+            @moves = []
             return true
         else
+            @moves = []
             return false
         end
 
@@ -38,7 +41,7 @@ class Knight < Piece
     def submoves
         MOVES.each do |cords|
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
-            if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0 
+            if new_cords[0] <= 7 && new_cords[0] >= 0 && new_cords[1] <= 7 && new_cords[1] >= 0 
                 @moves.push(new_cords)
             end
         end
@@ -54,7 +57,7 @@ class Rook < Piece
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
             until stop_point do
                 new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
-                if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0
+                if new_cords[0] <= 7 && new_cords[0] >= 0 && new_cords[1] <= 7 && new_cords[1] >= 0
                     stop_point = true if all_positions.include?(new_cords)
                     @moves.push(new_cords)
                 else
@@ -75,7 +78,7 @@ class Bishop < Piece
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
             until stop_point do
                 new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
-                if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0
+                if new_cords[0] <= 7 && new_cords[0] >= 0 && new_cords[1] <= 7 && new_cords[1] >= 0
                     stop_point = true if all_positions.include?(new_cords)
                     @moves.push(new_cords)
                 else
@@ -95,7 +98,7 @@ class Queen < Piece
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
             until stop_point do
                 new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
-                if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0
+                if new_cords[0] <= 7 && new_cords[0] >= 0 && new_cords[1] <= 7 && new_cords[1] >= 0
                     stop_point = true if all_positions.include?(new_cords)
                     @moves.push(new_cords)
                 else
@@ -112,8 +115,11 @@ class King < Piece
     def move(move_pos, ally_positions, check_in_pos)
         if self.valid_move?(move_pos, check_in_pos) && !ally_positions.include?(move_pos)
             self.position = move_pos 
+            path.push(move_pos)
+            @moves = []
             return true
         else
+            @moves = []
             return false
         end
 
@@ -131,9 +137,55 @@ class King < Piece
     def submoves
         MOVES.each do |cords|
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
-            if new_cords[0] <= 8 && new_cords[0] >= 0 && new_cords[1] <= 8 && new_cords[1] >= 0 
+            if new_cords[0] <= 7 && new_cords[0] >= 0 && new_cords[1] <= 7 && new_cords[1] >= 0 
                 @moves.push(new_cords)
             end
         end
     end
+end
+
+class Pawn < Piece
+    attr_accessor :position, :colour, :path, :moves, :first_move
+    def initialize(start = [0,0], colour="black", path =[])
+        @colour = colour
+        @path = path[0..-1]
+        @path.push(start)
+        @position = start
+        @moves = []
+        @first_move = true
+    end
+
+    def move (new_position, ally_positions, enemy_positions)
+        if self.valid_move?(new_position, ally_positions, enemy_positions)
+            self.position = new_position
+            path.push(new_position)
+            @moves = []
+            @first_move = false
+            return true
+        else
+            @moves = []
+            return false
+        end
+    end
+
+    #black at top, white bottom
+    # [x, y] x= length, y=height
+    def valid_move? (new_position, ally_positions, enemy_positions)
+        return false if ally_positions.include?(new_position)
+        return false if (new_position[1] - self.position[1]).abs > 1 && !first_move
+        return false if (new_position[0] - self.position[0]).abs > 1
+        if new_position[0] != self.position[0]
+            return false unless enemy_positions.include?(new_position)
+        end
+        if self.colour == "black"
+            return false if new_position[1] > self.position[1]
+        else
+            return false if new_position[1] < self.position[1]
+        end
+        return true
+    end
+
+    def submoves
+    end
+
 end

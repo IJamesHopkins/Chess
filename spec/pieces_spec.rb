@@ -50,3 +50,27 @@ describe King do
         end
     end
 end
+
+describe Pawn do
+    describe "#move" do
+        it "takes over the piece at x, y - white" do
+            pawn = Pawn.new([5,1], "white")
+            pawn.move([6,2],[[5,2]], [[6,2]])
+            expect(pawn.position).to eql([6,2])
+        end
+        it "takes over the piece at x, y - black" do
+            pawn = Pawn.new([5,5], "black")
+            expect(pawn.move([6,4],[],[])).to eql(false)
+            pawn.move([6,4],[[5,4]], [[6,4]])
+            expect(pawn.position).to eql([6,4])
+        end
+        it "pawn first move check" do
+            pawn = Pawn.new([5,5], "black")
+            pawn.move([5,3],[], [])
+            expect(pawn.position).to eql([5,3])
+            expect(pawn.move([5,1],[],[])).to eql(false)
+            pawn.move([5,2],[], [])
+            expect(pawn.position).to eql([5,2])
+        end
+    end
+end
