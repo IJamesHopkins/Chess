@@ -1,11 +1,16 @@
 require './lib/pieces.rb'
 
 class Board
-
+    attr_accessor :black_pieces, :white_pieces, :turn
     def initialize
+        @black_pieces = []
+        @white_pieces = []
+        @turn = "white"
+    end
+
+    def standard_board
         @black_pieces = initial_board("black")
         @white_pieces = initial_board("white")
-        @turn = "white"
     end
 
     def initial_board(colour)
@@ -54,6 +59,40 @@ class Board
             end
         end
         return " "
+    end
+    
+    def check? (pieces, king_pos)
+        pieces.each do |piece|
+            if piece.is_a?(Knight) || piece.is_a?(King)
+                piece.submoves
+                return true if piece.moves.include?(king_pos)
+                break
+            end
+            unless piece.is_a?(Pawn)
+                positions = pieces_to_array(@black_pieces).append(pieces_to_array(@white_pieces))
+                piece.submoves(positions)
+                return true if piece.moves.include?(king_pos)
+            end
+            if piece.is_a?(Pawn)
+                pawn_location = piece.position
+                if piece.colour == "white"
+                    return true if [pawn_location[0] - 1, pawn_location[1] + 1] == king_pos
+                    return true if [pawn_location[0] + 1, pawn_location[1] + 1] == king_pos
+                else
+                    return true if [pawn_location[0] - 1, pawn_location[1] - 1] == king_pos
+                    return true if [pawn_location[0] + 1, pawn_location[1] - 1] == king_pos
+                end
+            end
+        end
+        return false
+    end
+
+    def pieces_to_array(pieces)
+        locations = []
+        pieces.each do |piece|
+            locations.push(piece.position)
+        end
+        return locations
     end
 end
 
