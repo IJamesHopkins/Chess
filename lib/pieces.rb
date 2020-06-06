@@ -46,6 +46,14 @@ class Knight < Piece
             end
         end
     end
+
+    def piece_token
+        if self.colour == "black"
+            return "♞"
+        else
+            return "♘"
+        end
+    end
 end
 
 class Rook < Piece
@@ -64,6 +72,14 @@ class Rook < Piece
                     stop_point = true
                 end
             end
+        end
+    end
+
+    def piece_token
+        if self.colour == "black"
+            return "♜"
+        else
+            return "♖"
         end
     end
 end
@@ -87,6 +103,14 @@ class Bishop < Piece
             end
         end
     end
+
+    def piece_token
+        if self.colour == "black"
+            return "♝"
+        else
+            return "♗"
+        end
+    end
 end
 
 class Queen < Piece
@@ -105,6 +129,14 @@ class Queen < Piece
                     stop_point = true
                 end
             end
+        end
+    end
+
+    def piece_token
+        if self.colour == "black"
+            return "♛"
+        else
+            return "♕"
         end
     end
 end
@@ -142,6 +174,15 @@ class King < Piece
             end
         end
     end
+
+    def piece_token
+        if self.colour == "black"
+            return "♚"
+        else
+            return "♔"
+        end
+    end
+    
 end
 
 class Pawn < Piece
@@ -183,5 +224,13 @@ class Pawn < Piece
             return false if new_position[1] < self.position[1]
         end
         return true
+    end
+
+    def piece_token
+        if self.colour == "black"
+            return "♟︎"
+        else
+            return "♙"
+        end
     end
 end
