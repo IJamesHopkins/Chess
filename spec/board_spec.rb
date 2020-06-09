@@ -1,6 +1,19 @@
 require './lib/board'
 
 describe Board do
+    describe "#move_piece" do
+        it "moves a pawn from one position to the next" do
+            board = Board.new
+            pieces = []
+            pieces.push(Pawn.new([7,1],"white",[]))
+            board.white_pieces = pieces
+            board.move_piece([7,1], [7,3])
+            expect(board.white_pieces[0].position).to eql([7,3])
+            expect(board.move_piece([0,0],[1,1])).to eql(false)
+            expect(board.move_piece([7,3], [7,5])).to eql(false)
+            expect(board.white_pieces[0].position).to eql([7,3])
+        end
+    end
     describe "#check?" do
         it "checks if something is in check given a list of enemy pieces and a king position" do
             board = Board.new

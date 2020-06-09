@@ -46,6 +46,55 @@ class Board
         end
     end
 
+
+    def move_piece (current_loc, new_loc)
+        if @turn == "black"
+            pieces = @black_pieces
+            antipieces = @white_pieces
+        else
+            pieces = @white_pieces
+            antipieces = @black_pieces
+        end
+        all_pieces = pieces[0..-1]
+        all_pieces.append(antipieces[0..-1])
+        piecehere = false
+        piece_to_move = nil
+        pieces.each do |piece|
+            if piece.position == current_loc
+                piecehere = true
+                piece_to_move = piece
+                break
+            end
+        end
+        unless piecehere
+            puts "No piece at this location!"
+            return false
+        end
+        if piece_to_move.is_a?(Pawn)
+            valid_move = piece_to_move.move(new_loc, pieces_to_array(pieces), pieces_to_array(antipieces))
+        else
+            valid_move = piece_to_move.move(new_loc,pieces_to_array(pieces), pieces_to_array(all_pieces))
+        end
+
+        if valid_move
+            piece_to_del = false
+            antipieces.each_with_index do |index, piece|
+                if piece.position == new_loc
+                    piece_to_del = index
+                    break
+                end
+            end
+            if piece_to_del
+                antipieces.delete_at(piece_to_del)
+            end
+            return true
+        else
+            puts "invalid move"
+            return false
+        end
+
+    end
+
     def piece_at_location(loc)
         @black_pieces.each do |piece|
             if piece.position == loc
@@ -95,6 +144,3 @@ class Board
         return locations
     end
 end
-
-board = Board.new
-board.place_board
