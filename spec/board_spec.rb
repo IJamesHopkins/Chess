@@ -53,4 +53,50 @@ describe Board do
             expect(board.check?(pieces, [7,2])).to eql(true)
         end
     end
+    describe "#checkmate?" do
+        it "checks if a player is in checkmate" do
+            board = Board.new
+            pieces = []
+            board.black_pieces.push(King.new([0,0], "black", []))
+            pieces.push(Rook.new([0,5], "white", []))
+            pieces.push(Rook.new([5,0], "white", []))
+            pieces.push(Bishop.new([5,5], "white", []))
+            board.white_pieces = pieces
+            expect(board.checkmate?("black")).to eql(true)
+            expect(board.black_pieces[0].position).to eql([0,0])
+        end
+        it "checks if a player is not in checkmate" do
+            board = Board.new
+            pieces = []
+            board.black_pieces.push(King.new([0,0], "black", []))
+            pieces.push(Rook.new([0,5], "white", []))
+            pieces.push(Rook.new([5,0], "white", []))
+            board.white_pieces = pieces
+            expect(board.checkmate?("black")).to eql(false)
+            expect(board.black_pieces[0].position).to eql([0,0])
+        end
+        it "checks if a player is in checkmate" do
+            board = Board.new
+            pieces = []
+            board.black_pieces.push(King.new([0,0], "black", []))
+            board.black_pieces.push(Queen.new([6,6], "black",[]))
+            pieces.push(Rook.new([0,5], "white", []))
+            pieces.push(Rook.new([5,0], "white", []))
+            pieces.push(Bishop.new([5,5], "white", []))
+            board.white_pieces = pieces
+            expect(board.checkmate?("black")).to eql(true)
+            expect(board.black_pieces[0].position).to eql([0,0])
+        end
+        it "checks if a player is in checkmate with pawns" do
+            board = Board.new
+            pieces = []
+            board.white_pieces.push(King.new([0,0], "white", []))
+            board.white_pieces.push(Pawn.new([1,0], "white",[]))
+            pieces.push(Rook.new([5,1], "black", []))
+            pieces.push(Bishop.new([5,5], "black", []))
+            board.black_pieces = pieces
+            expect(board.checkmate?("white")).to eql(false)
+            expect(board.white_pieces[0].position).to eql([0,0])
+        end
+    end
 end

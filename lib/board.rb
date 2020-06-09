@@ -118,7 +118,7 @@ class Board
                 break
             end
             unless piece.is_a?(Pawn)
-                positions = pieces_to_array(@black_pieces).append(pieces_to_array(@white_pieces))
+                positions = pieces_to_array(@black_pieces).concat(pieces_to_array(@white_pieces))
                 piece.submoves(positions)
                 return true if piece.moves.include?(king_pos)
             end
@@ -131,6 +131,69 @@ class Board
                     return true if [pawn_location[0] - 1, pawn_location[1] - 1] == king_pos
                     return true if [pawn_location[0] + 1, pawn_location[1] - 1] == king_pos
                 end
+            end
+        end
+        return false
+    end
+
+    def checkmate? (colour)
+        if colour == "white"
+            pieces = @white_pieces
+            attacking_pieces = @black_pieces
+        else
+            pieces = @black_pieces
+            attacking_pieces = @white_pieces
+        end
+        new_pos = 0
+        old_pos = 0
+
+        pieces.each do |piece|
+            if piece.is_a?(Knight) || piece.is_a?(King)
+                piece.submoves
+                old_pos = piece.position
+                piece.moves.each do |new_move|
+                    next if pieces_to_array(pieces).include?(new_move)
+                    piece.position = new_move
+                    unless check?(attacking_pieces, find_king(pieces))
+                        piece.position = old_pos
+                        return false
+                    end
+                end
+                piece.position = old_pos
+            elsif piece.is_a?(Pawn)
+                piece.submoves(pieces_to_array(pieces), pieces_to_array(attacking_pieces))
+                old_pos = piece.position
+                p piece.moves
+                piece.moves.each do |new_move|
+                    next if pieces_to_array(pieces).include?(new_move)
+                    piece.position = new_move
+                    unless check?(attacking_pieces, find_king(pieces))
+                        piece.position = old_pos
+                        return false
+                    end
+                end
+                piece.position = old_pos
+            else
+                piece.submoves(pieces_to_array(@black_pieces).concat(pieces_to_array(@white_pieces)))
+                piece.moves.each do |new_move|
+                    next if pieces_to_array(pieces).include?(new_move)
+                    piece.position = new_move
+                    unless check?(attacking_pieces, find_king(pieces))
+                        piece.position = old_pos
+                        return false
+                    end
+                end
+                piece.position = old_pos
+            end
+        end
+        return true
+
+    end
+
+    def find_king(pieces)
+        pieces.each do |piece|
+            if piece.is_a?(King)
+                return piece.position
             end
         end
         return false
