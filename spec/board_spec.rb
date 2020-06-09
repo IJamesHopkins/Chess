@@ -13,6 +13,14 @@ describe Board do
             expect(board.move_piece([7,3], [7,5])).to eql(false)
             expect(board.white_pieces[0].position).to eql([7,3])
         end
+        it "moves a piece to an enemy location" do
+            board = Board.new
+            board.white_pieces.push(Rook.new([0,0], "white", []))
+            board.black_pieces.push(Rook.new([5,0], "black", []))
+            expect(board.move_piece([0,0],[5,0])).to eql(true)
+            expect(board.white_pieces[0].position).to eql([5,0])
+            expect(board.black_pieces[0]).to eql(nil)
+        end
     end
     describe "#check?" do
         it "checks if something is in check given a list of enemy pieces and a king position" do

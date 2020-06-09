@@ -56,7 +56,7 @@ class Board
             antipieces = @black_pieces
         end
         all_pieces = pieces[0..-1]
-        all_pieces.append(antipieces[0..-1])
+        all_pieces.concat(antipieces)
         piecehere = false
         piece_to_move = nil
         pieces.each do |piece|
@@ -78,7 +78,7 @@ class Board
 
         if valid_move
             piece_to_del = false
-            antipieces.each_with_index do |index, piece|
+            antipieces.each_with_index do |piece, index|
                 if piece.position == new_loc
                     piece_to_del = index
                     break
