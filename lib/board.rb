@@ -146,6 +146,7 @@ class Board
         end
         new_pos = 0
         old_pos = 0
+        delete_ind = nil
 
         pieces.each do |piece|
             if piece.is_a?(Knight) || piece.is_a?(King)
@@ -153,8 +154,20 @@ class Board
                 old_pos = piece.position
                 piece.moves.each do |new_move|
                     next if pieces_to_array(pieces).include?(new_move)
+                    if pieces_to_array(attacking_pieces).include?(new_move)
+                        pieces_to_check = attacking_pieces[0..-1]
+                        pieces_to_check.each_with_index do |val, ind|
+                            if val.position == new_move
+                                delete_ind = ind
+                                break
+                            end
+                        end
+                        pieces_to_check.delete_at(delete_ind)
+                    else
+                        pieces_to_check = attacking_pieces
+                    end
                     piece.position = new_move
-                    unless check?(attacking_pieces, find_king(pieces))
+                    unless check?(pieces_to_check, find_king(pieces))
                         piece.position = old_pos
                         return false
                     end
@@ -163,11 +176,22 @@ class Board
             elsif piece.is_a?(Pawn)
                 piece.submoves(pieces_to_array(pieces), pieces_to_array(attacking_pieces))
                 old_pos = piece.position
-                p piece.moves
                 piece.moves.each do |new_move|
                     next if pieces_to_array(pieces).include?(new_move)
+                    if pieces_to_array(attacking_pieces).include?(new_move)
+                        pieces_to_check = attacking_pieces[0..-1]
+                        pieces_to_check.each_with_index do |val, ind|
+                            if val.position == new_move
+                                delete_ind = ind
+                                break
+                            end
+                        end
+                        pieces_to_check.delete_at(delete_ind)
+                    else
+                        pieces_to_check = attacking_pieces
+                    end
                     piece.position = new_move
-                    unless check?(attacking_pieces, find_king(pieces))
+                    unless check?(pieces_to_check, find_king(pieces))
                         piece.position = old_pos
                         return false
                     end
@@ -177,8 +201,20 @@ class Board
                 piece.submoves(pieces_to_array(@black_pieces).concat(pieces_to_array(@white_pieces)))
                 piece.moves.each do |new_move|
                     next if pieces_to_array(pieces).include?(new_move)
+                    if pieces_to_array(attacking_pieces).include?(new_move)
+                        pieces_to_check = attacking_pieces[0..-1]
+                        pieces_to_check.each_with_index do |val, ind|
+                            if val.position == new_move
+                                delete_ind = ind
+                                break
+                            end
+                        end
+                        pieces_to_check.delete_at(delete_ind)
+                    else
+                        pieces_to_check = attacking_pieces
+                    end
                     piece.position = new_move
-                    unless check?(attacking_pieces, find_king(pieces))
+                    unless check?(pieces_to_check, find_king(pieces))
                         piece.position = old_pos
                         return false
                     end

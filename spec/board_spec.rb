@@ -98,5 +98,15 @@ describe Board do
             expect(board.checkmate?("white")).to eql(false)
             expect(board.white_pieces[0].position).to eql([0,0])
         end
+        it "checks if a player is not in check after taking a piece that put them in check" do
+            board = Board.new
+            pieces = []
+            board.white_pieces.push(King.new([0,0], "white", []))
+            board.white_pieces.push(Pawn.new([1,0], "white",[]))
+            board.white_pieces.push(Pawn.new([1,1], "white",[]))
+            board.white_pieces.push(Rook.new([5,5], "white",[]))
+            board.black_pieces.push(Rook.new([0,5], "black",[]))
+            expect(board.checkmate?("white")).to eql(false)
+        end
     end
 end
