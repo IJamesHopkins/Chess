@@ -209,6 +209,15 @@ class Pawn < Piece
         end
     end
 
+    def submoves(ally_positions, enemy_positions)
+        potential_moves = [-1,-2,0,1,2]
+        potential_moves.each do |x|
+            potential_moves.each do |y|
+                new_position = [self.position[0] + x, self.position[1] + y]
+                @moves.push(new_position) if valid_move?(new_position, ally_positions, enemy_positions)
+            end
+        end
+    end
     #black at top, white bottom
     # [x, y] x= length, y=height
     def valid_move? (new_position, ally_positions, enemy_positions)
