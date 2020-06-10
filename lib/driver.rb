@@ -20,6 +20,7 @@ puts "Welcome to Chess!"
 puts "What would you like to do? Type new for a new game, load to load a game or exit to quit"
 initial = true
 valid_move = true
+checkmate = false
 usr_input = gets.chomp.downcase
 
 while initial
@@ -41,6 +42,26 @@ while initial
 end
 
 while usr_input != "exit" do
+    if checkmate
+        puts "The game is over!"
+        puts "What would you like to do now? Create a (new) game, (load) a game or (exit)"
+        usr_input = gets.chomp.downcase
+        if usr_input == "new"
+            board = Board.new
+            board.standard_board
+            checkmate = false
+        elsif usr_input == "load"
+            puts "What is the name of the file you would like to load"
+            usr_input = gets.chomp
+            fname = "#{usr_input}.txt"
+            board = YAML::load(File.open(fname, "r"))
+            checkmate = false
+        elsif usr_input == "exit"
+            break
+        else
+            next
+        end
+    end
     board.place_board
     puts "#{board.turn} to play!"
     puts "Enter the coordinates of the pieces you want to move, the horizontal axis is the first digit, vertical the second"
@@ -86,6 +107,7 @@ while usr_input != "exit" do
         puts "Check"
         if board.checkmate?(board.turn)
             puts "Checkmate!"
+            checkmate = true
         end
     end
 end
