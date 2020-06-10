@@ -64,13 +64,13 @@ class Rook < Piece
             stop_point = false
             new_cords = [cords[0] + @position[0], cords[1] + @position[1]]
             until stop_point do
-                new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
                 if new_cords[0] <= 7 && new_cords[0] >= 0 && new_cords[1] <= 7 && new_cords[1] >= 0
                     stop_point = true if all_positions.include?(new_cords)
                     @moves.push(new_cords)
                 else
                     stop_point = true
                 end
+                new_cords = [cords[0] + new_cords[0], cords[1] + new_cords[1]]
             end
         end
     end
@@ -227,10 +227,13 @@ class Pawn < Piece
         if new_position[0] != self.position[0]
             return false unless enemy_positions.include?(new_position)
         end
+        if enemy_positions.include?(new_position)
+            return false unless (new_position[0] - self.position[0]).abs == 1
+        end
         if self.colour == "black"
-            return false if new_position[1] > self.position[1]
+            return false if new_position[1] >= self.position[1]
         else
-            return false if new_position[1] < self.position[1]
+            return false if new_position[1] <= self.position[1]
         end
         return true
     end

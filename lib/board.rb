@@ -46,6 +46,13 @@ class Board
         end
     end
 
+    def switch_turn
+        if @turn == "black"
+            @turn = "white"
+        else
+            @turn = "black"
+        end
+    end
 
     def move_piece (current_loc, new_loc)
         if @turn == "black"
@@ -115,7 +122,7 @@ class Board
             if piece.is_a?(Knight) || piece.is_a?(King)
                 piece.submoves
                 return true if piece.moves.include?(king_pos)
-                break
+                next
             end
             unless piece.is_a?(Pawn)
                 positions = pieces_to_array(@black_pieces).concat(pieces_to_array(@white_pieces))
@@ -134,6 +141,15 @@ class Board
             end
         end
         return false
+    end
+
+
+    def check_public
+        if self.turn == "black"
+            return check?(@white_pieces, find_king(@black_pieces))
+        else
+            return check?(@black_pieces, find_king(@white_pieces))
+        end
     end
 
     def checkmate? (colour)
@@ -198,6 +214,7 @@ class Board
                 end
                 piece.position = old_pos
             else
+                old_pos = piece.position
                 piece.submoves(pieces_to_array(@black_pieces).concat(pieces_to_array(@white_pieces)))
                 piece.moves.each do |new_move|
                     next if pieces_to_array(pieces).include?(new_move)
